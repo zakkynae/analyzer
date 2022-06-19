@@ -24,9 +24,18 @@ namespace FileAnalyzer
                 {
                     Console.Write("Введите директорию, информацию о которой хотите получить: ");
                     var path = Console.ReadLine();
-                    var tuple = SearchInDb(path);
-                    if(tuple.count > 0) PrintData(tuple.fileData);
+                    var files = SearchInDb(path);
+                    if(files.count > 0) PrintData(files.fileData);
                     else PrintData(GetFiles(path));
+                }
+                if((Menu)action == Menu.GetLength)
+                {
+                    Console.Write("Введите директорию: ");
+                    var path = Console.ReadLine();
+                    Console.WriteLine("Топ-10 самых больших файлов всей директории");
+                    var files = SearchInDb(path);
+                    if(files.count > 0) PrintData(GetLength(files.fileData));
+                    else PrintData(GetLength(GetFiles(path)));
                 }
             }
             while ((Menu)action != Menu.Quit);
@@ -83,6 +92,16 @@ namespace FileAnalyzer
             return fileData;
         }
         #endregion
+        #region Топ 10 больших файлов дирректорий
+        public static List<FileData> GetLength(List<FileData> files)
+        {
+            var sortedFiles = files.OrderByDescending(f => f.Length).ToList();
+            var lengths = new List<FileData>();
+            for(int i = 0; i < 10; i++)
+                lengths.Add(sortedFiles[i]);
+            return lengths;
+        }
+        #endregion
         #region Запись в БД
         public static void WriteDb(List<FileData> fileData)
         {
@@ -119,5 +138,6 @@ namespace FileAnalyzer
                 Console.WriteLine(file.GetString());
         }
         #endregion
+
     }
 }
