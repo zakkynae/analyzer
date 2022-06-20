@@ -16,27 +16,61 @@ namespace FileAnalyzer
                 action = int.Parse(Console.ReadLine());
                 if((Menu)action == Menu.GetNewData)
                 {
-                    Console.Write("Введите директорию, которую хотите отсканировать: ");
+                    Console.Clear();
+                    Console.Write("Введите директорию, которую хотите добавить в БД: ");
                     var path = Console.ReadLine();
                     WriteDb(GetFiles(path));
+                    Console.WriteLine("База данных обновлена.\n Для продолжения нажмите любуюу клавишу...");
+                    Console.ReadKey();
                 }
                 if((Menu)action == Menu.GetData)
                 {
+                    Console.Clear();
                     Console.Write("Введите директорию, информацию о которой хотите получить: ");
                     var path = Console.ReadLine();
                     var files = SearchInDb(path);
                     if(files.count > 0) PrintData(files.fileData);
                     else PrintData(GetFiles(path));
+                    Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
+                    Console.ReadKey();
                 }
                 if((Menu)action == Menu.GetLength)
                 {
+                    Console.Clear();
                     Console.Write("Введите директорию: ");
                     var path = Console.ReadLine();
-                    Console.WriteLine("Топ-10 самых больших файлов всей директории");
+                    Console.WriteLine("Топ-10 самых больших файлов директории");
                     var files = SearchInDb(path);
                     if(files.count > 0) PrintData(GetLength(files.fileData));
                     else PrintData(GetLength(GetFiles(path)));
+                    Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
+                    Console.ReadKey();
                 }
+                if((Menu)action == Menu.GetExtensions)
+                {
+                    Console.Clear();
+                    Console.Write("Введите директорию: ");
+                    var path = Console.ReadLine();
+                    Console.WriteLine("Топ-10 самых популярных расширений директории");
+                    var files = SearchInDb(path);
+                    if (files.count > 0) PrintData(GetExtension(files.fileData));
+                    else PrintData(GetExtension(GetFiles(path)));
+                    Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
+                    Console.ReadKey();
+                }
+                if((Menu)action == Menu.GetBiggestExtensions)
+                {
+                    Console.Clear();
+                    Console.Write("Введите директорию: ");
+                    var path = Console.ReadLine();
+                    Console.WriteLine("Топ-10 самых больших расширений директории");
+                    var files = SearchInDb(path);
+                    if(files.count > 0) PrintData(GetBiggestExtensions(files.fileData));
+                    else PrintData(GetBiggestExtensions(GetFiles(path)));
+                    Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
+                    Console.ReadKey();
+                }
+
             }
             while ((Menu)action != Menu.Quit);
         }
@@ -102,6 +136,41 @@ namespace FileAnalyzer
             return lengths;
         }
         #endregion
+        #region Топ 10 расширений
+        public static string[] GetExtension(List<FileData> files)
+        {
+            var extension = new Dictionary<string,int>();
+            foreach (var file in files)
+            {
+                if (!extension.ContainsKey(file.Extension)) extension[file.Extension] = 0;
+                extension[file.Extension]++;
+            }
+            extension = extension.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+
+            var extensionsDir= extension.Keys.ToList();
+            var firstTenExtensions = new string[10];
+            for (int i = 0; i < 10; i++)
+                firstTenExtensions[i] = extensionsDir[i];
+            return firstTenExtensions;
+        }
+        #endregion
+        #region Топ 10 расширений по суммарному объему
+        public static string[] GetBiggestExtensions(List<FileData> files)
+        {
+            var extension = new Dictionary<string, long>();
+            foreach (var file in files)
+            {
+                if (!extension.ContainsKey(file.Extension)) extension[file.Extension] = 0;
+                extension[file.Extension] =+ file.Length;
+            }
+            extension = extension.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+            var extensionsDir = extension.Keys.ToList();
+            var biggestExtension = new string[10];
+            for (int i = 0; i < 10; i++)
+                biggestExtension[i] = extensionsDir[i];
+            return biggestExtension;
+        }
+        #endregion
         #region Запись в БД
         public static void WriteDb(List<FileData> fileData)
         {
@@ -116,6 +185,7 @@ namespace FileAnalyzer
         }
         #endregion
         #region Поиск в БД
+ 
         public static (List<FileData> fileData, int count)  SearchInDb(string path)
         {
             var db = File.ReadAllLines(database);
@@ -136,6 +206,11 @@ namespace FileAnalyzer
         {
             foreach(var file in fileData)
                 Console.WriteLine(file.GetString());
+        }
+        public static void PrintData (string[] fileData)
+        {
+            foreach (var file in fileData)
+                Console.WriteLine(file);
         }
         #endregion
 

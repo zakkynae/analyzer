@@ -11,6 +11,7 @@ namespace FileAnalyzer
         GetNewData = 1,
         GetData,
         GetExtensions,
+        GetBiggestExtensions,
         GetLength,
         Quit
     }
