@@ -13,6 +13,7 @@ namespace FileAnalyzer
         GetExtensions,
         GetBiggestExtensions,
         GetLength,
+        GetBiggestDirs,
         Quit
     }
 }

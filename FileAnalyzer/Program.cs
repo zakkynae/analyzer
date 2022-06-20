@@ -46,6 +46,18 @@ namespace FileAnalyzer
                     Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
                     Console.ReadKey();
                 }
+                if((Menu)action == Menu.GetBiggestDirs)
+                {
+                    Console.Clear();
+                    Console.Write("Введите директорию: ");
+                    var path = Console.ReadLine();
+                    Console.WriteLine("Топ-10 самых больших директорий");
+                    var files = SearchInDb(path);
+                    if (files.count > 0) PrintData(GetBiggestDirs(files.fileData));
+                    else PrintData(GetBiggestDirs(GetFiles(path)));
+                    Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
+                    Console.ReadKey();
+                }
                 if((Menu)action == Menu.GetExtensions)
                 {
                     Console.Clear();
@@ -136,6 +148,33 @@ namespace FileAnalyzer
             return lengths;
         }
         #endregion
+        #region Топ 10 больших директорий
+        public static string[] GetBiggestDirs(List<FileData> files)
+        {
+            var dirs = new Dictionary<string, long>();
+            foreach (var file in files)
+            {
+                file.FullName = file.FullName.Replace(file.Name, "");
+                if (!dirs.ContainsKey(file.FullName)) dirs[file.FullName] = 0;
+                dirs[file.FullName] =+ file.Length;
+            }
+            dirs = dirs.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+            var extensionsDir = dirs.Keys.ToList();
+            string[] biggestDirs;
+            if(extensionsDir.Count >= 10)
+            {
+                biggestDirs = new string[10];
+                for (int i = 0; i < 10; i++)
+                    biggestDirs[i] = extensionsDir[i];
+            } else
+            {
+                biggestDirs = new string[extensionsDir.Count];
+                for (int i = 0; i < extensionsDir.Count; i++)
+                    biggestDirs[i] = extensionsDir[i];
+            }
+            return biggestDirs;
+        }
+        #endregion
         #region Топ 10 расширений
         public static string[] GetExtension(List<FileData> files)
         {
@@ -185,7 +224,6 @@ namespace FileAnalyzer
         }
         #endregion
         #region Поиск в БД
- 
         public static (List<FileData> fileData, int count)  SearchInDb(string path)
         {
             var db = File.ReadAllLines(database);
@@ -194,7 +232,8 @@ namespace FileAnalyzer
             {
                 //var file = JsonSerializer.Deserialize<FileData>(json);
                 var file = JsonConvert.DeserializeObject<FileData>(json);
-                if (file.FullName.Contains(path))
+                file.FullName = file.FullName.Replace(file.Name, "");
+                if (file.FullName == (path+ "\\"))
                     fileData.Add(file);
             }
             var result = (list: fileData, count: fileData.Count);
