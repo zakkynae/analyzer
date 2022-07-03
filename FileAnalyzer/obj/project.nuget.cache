@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vqy9KbrEq7sMjNHlkfqpUH+f2TvydBRCo+g580XbPwdvcVnY8pxZD+TY5hV11ZRWyDfdqAbyovGAO3N2+VyHAA==",
+  "dgSpecHash": "wxuz6fFNURbdwKwjaDNnbdE0aRKUYNV7Te+eSVU9+vm6qgZOnvH2iEPNN7EaD+VI/oKKOQSjl4Oz8XhmzxHq9A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\void_\\Desktop\\file-analyzer-main\\FileAnalyzer\\FileAnalyzer.csproj",
+  "projectFilePath": "C:\\Users\\void_\\Desktop\\hw\\FileAnalyzer\\FileAnalyzer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\void_\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
   ],

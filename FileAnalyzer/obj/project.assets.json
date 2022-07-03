@@ -54,11 +54,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\void_\\Desktop\\file-analyzer-main\\FileAnalyzer\\FileAnalyzer.csproj",
+      "projectUniqueName": "C:\\Users\\void_\\Desktop\\hw\\FileAnalyzer\\FileAnalyzer.csproj",
       "projectName": "FileAnalyzer",
-      "projectPath": "C:\\Users\\void_\\Desktop\\file-analyzer-main\\FileAnalyzer\\FileAnalyzer.csproj",
+      "projectPath": "C:\\Users\\void_\\Desktop\\hw\\FileAnalyzer\\FileAnalyzer.csproj",
       "packagesPath": "C:\\Users\\void_\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\void_\\Desktop\\file-analyzer-main\\FileAnalyzer\\obj\\",
+      "outputPath": "C:\\Users\\void_\\Desktop\\hw\\FileAnalyzer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

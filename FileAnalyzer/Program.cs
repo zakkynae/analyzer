@@ -29,7 +29,7 @@ namespace FileAnalyzer
                     Console.Write("Введите директорию, информацию о которой хотите получить: ");
                     var path = Console.ReadLine();
                     var files = SearchInDb(path);
-                    if(files.count > 0) PrintData(files.fileData);
+                    if(files.Count > 0) PrintData(files);
                     else PrintData(GetFiles(path));
                     Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
                     Console.ReadKey();
@@ -41,7 +41,7 @@ namespace FileAnalyzer
                     var path = Console.ReadLine();
                     Console.WriteLine("Топ-10 самых больших файлов директории");
                     var files = SearchInDb(path);
-                    if(files.count > 0) PrintData(GetLength(files.fileData));
+                    if(files.Count > 0) PrintData(GetLength(files));
                     else PrintData(GetLength(GetFiles(path)));
                     Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
                     Console.ReadKey();
@@ -53,7 +53,7 @@ namespace FileAnalyzer
                     var path = Console.ReadLine();
                     Console.WriteLine("Топ-10 самых больших директорий");
                     var files = SearchInDb(path);
-                    if (files.count > 0) PrintData(GetBiggestDirs(files.fileData));
+                    if (files.Count > 0) PrintData(GetBiggestDirs(files));
                     else PrintData(GetBiggestDirs(GetFiles(path)));
                     Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
                     Console.ReadKey();
@@ -65,7 +65,7 @@ namespace FileAnalyzer
                     var path = Console.ReadLine();
                     Console.WriteLine("Топ-10 самых популярных расширений директории");
                     var files = SearchInDb(path);
-                    if (files.count > 0) PrintData(GetExtension(files.fileData));
+                    if (files.Count > 0) PrintData(GetExtension(files));
                     else PrintData(GetExtension(GetFiles(path)));
                     Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
                     Console.ReadKey();
@@ -77,10 +77,29 @@ namespace FileAnalyzer
                     var path = Console.ReadLine();
                     Console.WriteLine("Топ-10 самых больших расширений директории");
                     var files = SearchInDb(path);
-                    if(files.count > 0) PrintData(GetBiggestExtensions(files.fileData));
+                    if(files.Count > 0) PrintData(GetBiggestExtensions(files));
                     else PrintData(GetBiggestExtensions(GetFiles(path)));
                     Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
                     Console.ReadKey();
+                }
+                if((Menu)action == Menu.GetChangesFiles)
+                {
+                    Console.Clear();
+                    Console.Write("Введите директорию, изменения которой хотите посмотреть: ");
+                    var path = Console.ReadLine();
+                    var infoDirectory = GetChanges(path);
+                    Console.WriteLine("Новые файлы: ");
+                    if (infoDirectory.newFiles.Count == 0) Console.WriteLine("Новых файлов нет.");
+                    else PrintData(infoDirectory.newFiles);
+                    Console.WriteLine("Удаленные файлы: ");
+                    if (infoDirectory.deletedFiles.Count == 0) Console.WriteLine("Удаленных файлов нет.");
+                    else PrintData(infoDirectory.deletedFiles);
+                    Console.WriteLine("Пересозданные файлы: ");
+                    if (infoDirectory.newTimeCreation.Count == 0) Console.WriteLine("Пересозданных файлов нет.");
+                    else PrintData(infoDirectory.newTimeCreation);
+                    Console.WriteLine("Отредоктированные файлы: ");
+                    if (infoDirectory.newLength.Count == 0) Console.WriteLine("Отредактированных файлов нет.");
+                    else PrintData(infoDirectory.newLength);
                 }
 
             }
@@ -224,7 +243,7 @@ namespace FileAnalyzer
         }
         #endregion
         #region Поиск в БД
-        public static (List<FileData> fileData, int count)  SearchInDb(string path)
+        public static List<FileData> SearchInDb(string path)
         {
             var db = File.ReadAllLines(database);
             var fileData = new List<FileData>();
@@ -236,20 +255,47 @@ namespace FileAnalyzer
                 if (file.FullName == (path+ "\\"))
                     fileData.Add(file);
             }
-            var result = (list: fileData, count: fileData.Count);
-            return result;
+
+            return fileData;
         }
         #endregion
         #region Вывод данных в консоль
         public static void PrintData(List<FileData> fileData)
         {
             foreach(var file in fileData)
-                Console.WriteLine(file.GetString());
+                Console.WriteLine(file);
         }
         public static void PrintData (string[] fileData)
         {
             foreach (var file in fileData)
                 Console.WriteLine(file);
+        }
+        #endregion
+        #region Изменение файлов
+        public static( List<FileData> newFiles, List<FileData> deletedFiles, List<FileData> newLength, List<FileData> newTimeCreation) GetChanges(string path)
+        {
+            var oldDb = SearchInDb(path);
+            if(oldDb.Count == 0)
+            {
+                throw new Exception("В прежней базе этой директории нет. Изменения не удсатся определить.");
+            }
+            var newDb = GetFiles(path);
+            var newFiles = new List<FileData>();
+            var deletedFiles = new List<FileData>();
+            var newLength = new List<FileData>();
+            var newTimeCreation = new List<FileData>();
+            foreach (var file in oldDb)
+            {
+                foreach(var newFile in newDb)
+                {
+                    if (file.Name == newFile.Name && file.Length != newFile.Length && file.CreationDate == newFile.CreationDate)
+                        newLength.Add(newFile);
+                    if (file.Name == newFile.Name && file.CreationDate != newFile.CreationDate)
+                        newTimeCreation.Add(newFile);
+                }
+            }
+            var result = (newFiles: newFiles, deletedFiles: deletedFiles, newLength: newLength, newTimeCreation: newTimeCreation) ;
+            return result;
         }
         #endregion
 
