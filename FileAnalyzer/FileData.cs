@@ -23,7 +23,7 @@
         //}
         public override string ToString()
         {
-            return $"Полное имя файла: {FullName}\tРасширение файла: {Extension}\tРазмер файла: {Length}\tДата создания файла: {CreationDate}\n";
+            return $"Имя файла: {Name}\tРасширение файла: {Extension}\tРазмер файла: {Length}\tДата создания файла: {CreationDate}\n";
         }
     }
 }

@@ -14,7 +14,7 @@ namespace FileAnalyzer
                 PrintMenu();
                 Console.Write("Выберите действие: ");
                 action = int.Parse(Console.ReadLine());
-                if((Menu)action == Menu.GetNewData)
+                if ((Menu)action == Menu.GetNewData)
                 {
                     Console.Clear();
                     Console.Write("Введите директорию, которую хотите добавить в БД: ");
@@ -23,30 +23,30 @@ namespace FileAnalyzer
                     Console.WriteLine("База данных обновлена.\n Для продолжения нажмите любуюу клавишу...");
                     Console.ReadKey();
                 }
-                if((Menu)action == Menu.GetData)
+                if ((Menu)action == Menu.GetData)
                 {
                     Console.Clear();
                     Console.Write("Введите директорию, информацию о которой хотите получить: ");
                     var path = Console.ReadLine();
                     var files = SearchInDb(path);
-                    if(files.Count > 0) PrintData(files);
+                    if (files.Count > 0) PrintData(files);
                     else PrintData(GetFiles(path));
                     Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
                     Console.ReadKey();
                 }
-                if((Menu)action == Menu.GetLength)
+                if ((Menu)action == Menu.GetLength)
                 {
                     Console.Clear();
                     Console.Write("Введите директорию: ");
                     var path = Console.ReadLine();
                     Console.WriteLine("Топ-10 самых больших файлов директории");
                     var files = SearchInDb(path);
-                    if(files.Count > 0) PrintData(GetLength(files));
+                    if (files.Count > 0) PrintData(GetLength(files));
                     else PrintData(GetLength(GetFiles(path)));
                     Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
                     Console.ReadKey();
                 }
-                if((Menu)action == Menu.GetBiggestDirs)
+                if ((Menu)action == Menu.GetBiggestDirs)
                 {
                     Console.Clear();
                     Console.Write("Введите директорию: ");
@@ -58,7 +58,7 @@ namespace FileAnalyzer
                     Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
                     Console.ReadKey();
                 }
-                if((Menu)action == Menu.GetExtensions)
+                if ((Menu)action == Menu.GetExtensions)
                 {
                     Console.Clear();
                     Console.Write("Введите директорию: ");
@@ -70,19 +70,19 @@ namespace FileAnalyzer
                     Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
                     Console.ReadKey();
                 }
-                if((Menu)action == Menu.GetBiggestExtensions)
+                if ((Menu)action == Menu.GetBiggestExtensions)
                 {
                     Console.Clear();
                     Console.Write("Введите директорию: ");
                     var path = Console.ReadLine();
                     Console.WriteLine("Топ-10 самых больших расширений директории");
                     var files = SearchInDb(path);
-                    if(files.Count > 0) PrintData(GetBiggestExtensions(files));
+                    if (files.Count > 0) PrintData(GetBiggestExtensions(files));
                     else PrintData(GetBiggestExtensions(GetFiles(path)));
                     Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
                     Console.ReadKey();
                 }
-                if((Menu)action == Menu.GetChangesFiles)
+                if ((Menu)action == Menu.GetChangesFiles)
                 {
                     Console.Clear();
                     Console.Write("Введите директорию, изменения которой хотите посмотреть: ");
@@ -119,12 +119,12 @@ namespace FileAnalyzer
         {
             var fileData = new List<FileData>();
             var dirs = new Stack<string>();
-            if(!Directory.Exists(path))
+            if (!Directory.Exists(path))
             {
                 throw new ArgumentException("Такой дирректории не существует");
-            } 
+            }
             dirs.Push(path);
-            while(dirs.Count > 0)
+            while (dirs.Count > 0)
             {
                 var currentDir = dirs.Pop();
                 string[] subdirs;
@@ -135,7 +135,7 @@ namespace FileAnalyzer
                 {
                     continue;
                 }
-                foreach(var dir in subdirs)
+                foreach (var dir in subdirs)
                 {
                     dirs.Push(dir);
                 }
@@ -147,7 +147,7 @@ namespace FileAnalyzer
                 {
                     continue;
                 }
-                foreach(var file in files)
+                foreach (var file in files)
                 {
                     var fileInfo = new FileInfo(file);
                     var data = new FileData(fileInfo.FullName, fileInfo.Name, fileInfo.Extension, fileInfo.Length, fileInfo.CreationTime);
@@ -162,7 +162,7 @@ namespace FileAnalyzer
         {
             var sortedFiles = files.OrderByDescending(f => f.Length).ToList();
             var lengths = new List<FileData>();
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
                 lengths.Add(sortedFiles[i]);
             return lengths;
         }
@@ -175,12 +175,12 @@ namespace FileAnalyzer
             {
                 file.FullName = file.FullName.Replace(file.Name, "");
                 if (!dirs.ContainsKey(file.FullName)) dirs[file.FullName] = 0;
-                dirs[file.FullName] =+ file.Length;
+                dirs[file.FullName] = +file.Length;
             }
             dirs = dirs.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
             var extensionsDir = dirs.Keys.ToList();
             string[] biggestDirs;
-            if(extensionsDir.Count >= 10)
+            if (extensionsDir.Count >= 10)
             {
                 biggestDirs = new string[10];
                 for (int i = 0; i < 10; i++)
@@ -197,7 +197,7 @@ namespace FileAnalyzer
         #region Топ 10 расширений
         public static string[] GetExtension(List<FileData> files)
         {
-            var extension = new Dictionary<string,int>();
+            var extension = new Dictionary<string, int>();
             foreach (var file in files)
             {
                 if (!extension.ContainsKey(file.Extension)) extension[file.Extension] = 0;
@@ -205,7 +205,7 @@ namespace FileAnalyzer
             }
             extension = extension.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 
-            var extensionsDir= extension.Keys.ToList();
+            var extensionsDir = extension.Keys.ToList();
             var firstTenExtensions = new string[10];
             for (int i = 0; i < 10; i++)
                 firstTenExtensions[i] = extensionsDir[i];
@@ -219,7 +219,7 @@ namespace FileAnalyzer
             foreach (var file in files)
             {
                 if (!extension.ContainsKey(file.Extension)) extension[file.Extension] = 0;
-                extension[file.Extension] =+ file.Length;
+                extension[file.Extension] = +file.Length;
             }
             extension = extension.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
             var extensionsDir = extension.Keys.ToList();
@@ -232,8 +232,8 @@ namespace FileAnalyzer
         #region Запись в БД
         public static void WriteDb(List<FileData> fileData)
         {
-            var db= new List<string>();
-            foreach(var file in fileData)
+            var db = new List<string>();
+            foreach (var file in fileData)
             {
                 //var json = JsonSerializer.Serialize(file);
                 var json = JsonConvert.SerializeObject(file);
@@ -247,12 +247,12 @@ namespace FileAnalyzer
         {
             var db = File.ReadAllLines(database);
             var fileData = new List<FileData>();
-            foreach(var json in db)
+            foreach (var json in db)
             {
                 //var file = JsonSerializer.Deserialize<FileData>(json);
                 var file = JsonConvert.DeserializeObject<FileData>(json);
                 file.FullName = file.FullName.Replace(file.Name, "");
-                if (file.FullName == (path+ "\\"))
+                if (file.FullName == (path + "\\"))
                     fileData.Add(file);
             }
 
@@ -262,42 +262,38 @@ namespace FileAnalyzer
         #region Вывод данных в консоль
         public static void PrintData(List<FileData> fileData)
         {
-            foreach(var file in fileData)
+            foreach (var file in fileData)
                 Console.WriteLine(file);
         }
-        public static void PrintData (string[] fileData)
+        public static void PrintData(string[] fileData)
         {
             foreach (var file in fileData)
                 Console.WriteLine(file);
         }
         #endregion
         #region Изменение файлов
-        public static( List<FileData> newFiles, List<FileData> deletedFiles, List<FileData> newLength, List<FileData> newTimeCreation) GetChanges(string path)
+        public static (List<FileData> newFiles, List<FileData> deletedFiles, List<FileData> newLength, List<FileData> newTimeCreation) GetChanges(string path)
         {
             var oldDb = SearchInDb(path);
-            if(oldDb.Count == 0)
+            if (oldDb.Count == 0)
             {
                 throw new Exception("В прежней базе этой директории нет. Изменения не удсатся определить.");
             }
             var newDb = GetFiles(path);
-            var newFiles = new List<FileData>();
+            var newFiles = new List<FileData>(newDb);
             var deletedFiles = new List<FileData>();
             var newLength = new List<FileData>();
             var newTimeCreation = new List<FileData>();
             foreach (var file in oldDb)
             {
-                foreach(var newFile in newDb)
-                {
-                    if (file.Name == newFile.Name && file.Length != newFile.Length && file.CreationDate == newFile.CreationDate)
-                        newLength.Add(newFile);
-                    if (file.Name == newFile.Name && file.CreationDate != newFile.CreationDate)
-                        newTimeCreation.Add(newFile);
-                }
+                if (!newDb.Any(x => x.Name == file.Name)) deletedFiles.Add(file);
+                newFiles.RemoveAll(x => x.Name == file.Name);
+                if (newDb.Any(x => x.Name == file.Name && x.Length != file.Length)) newLength.Add(file);
+                if (newDb.Any(x => x.Name == file.Name && x.CreationDate != file.CreationDate)) newTimeCreation.Add(file);
             }
-            var result = (newFiles: newFiles, deletedFiles: deletedFiles, newLength: newLength, newTimeCreation: newTimeCreation) ;
+            var result = (newFiles: newFiles, deletedFiles: deletedFiles, newLength: newLength, newTimeCreation: newTimeCreation);
             return result;
         }
         #endregion
-
     }
 }
