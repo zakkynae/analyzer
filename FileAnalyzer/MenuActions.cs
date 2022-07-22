@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FileAnalyzer
 {
-    public enum Menu
+    public enum MenuActions
     {
         GetNewData = 1,
         GetData,
@@ -15,6 +15,7 @@ namespace FileAnalyzer
         GetLength,
         GetBiggestDirs,
         GetChangesFiles,
+        //GetChangesDirs,
         Quit
     }
 }

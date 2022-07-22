@@ -8,109 +8,89 @@ namespace FileAnalyzer
     {
         static void Main()
         {
-            int action;
-            do
+            MenuActions action;
+
+            while (true)
             {
                 PrintMenu();
                 Console.Write("Выберите действие: ");
-                action = int.Parse(Console.ReadLine());
-                if ((Menu)action == Menu.GetNewData)
+                action = (MenuActions)int.Parse(Console.ReadLine());
+                Console.Clear();
+                Console.Write("Введите директорию: ");
+                var path = Console.ReadLine();
+                var files = SearchInDb(path);
+                switch (action)
                 {
-                    Console.Clear();
-                    Console.Write("Введите директорию, которую хотите добавить в БД: ");
-                    var path = Console.ReadLine();
-                    WriteDb(GetFiles(path));
-                    Console.WriteLine("База данных обновлена.\n Для продолжения нажмите любуюу клавишу...");
-                    Console.ReadKey();
+                    case MenuActions.GetNewData:
+                        WriteDb(GetFiles(path));
+                        Console.WriteLine("База данных обновлена.\n Для продолжения нажмите любуюу клавишу...");
+                        Console.ReadKey();
+                        break;
+                    case MenuActions.GetData:
+                        if (files.Count > 0) PrintData(files);
+                        else PrintData(GetFiles(path));
+                        break;
+                    case MenuActions.GetLength:
+                        Console.WriteLine("Топ-10 самых больших файлов директории");
+                        if (files.Count > 0) PrintData(GetLength(files));
+                        else PrintData(GetLength(GetFiles(path)));
+                        break;
+                    case MenuActions.GetBiggestDirs:
+                        Console.WriteLine("Топ-10 самых больших директорий");
+                        if (files.Count > 0) PrintData(GetBiggestDirs(files));
+                        else PrintData(GetBiggestDirs(GetFiles(path)));
+                        break;
+                    case MenuActions.GetExtensions:
+                        Console.WriteLine("Топ-10 самых популярных расширений директории");
+                        if (files.Count > 0) PrintData(GetExtension(files));
+                        else PrintData(GetExtension(GetFiles(path)));
+                        break;
+                    case MenuActions.GetBiggestExtensions:
+                        Console.WriteLine("Топ-10 самых больших расширений директории");
+                        if (files.Count > 0) PrintData(GetBiggestExtensions(files));
+                        else PrintData(GetBiggestExtensions(GetFiles(path)));
+                        break;
+                    case MenuActions.GetChangesFiles:
+                        var infoDirectory = GetChangesFiles(path);
+                        Console.WriteLine("Новые файлы: ");
+                        if (infoDirectory.newFiles.Count == 0) Console.WriteLine("Новых файлов нет.");
+                        else PrintData(infoDirectory.newFiles);
+                        Console.WriteLine("Удаленные файлы: ");
+                        if (infoDirectory.deletedFiles.Count == 0) Console.WriteLine("Удаленных файлов нет.");
+                        else PrintData(infoDirectory.deletedFiles);
+                        Console.WriteLine("Пересозданные файлы: ");
+                        if (infoDirectory.newTimeCreation.Count == 0) Console.WriteLine("Пересозданных файлов нет.");
+                        else PrintData(infoDirectory.newTimeCreation);
+                        Console.WriteLine("Отредоктированные файлы: ");
+                        if (infoDirectory.newLength.Count == 0) Console.WriteLine("Отредактированных файлов нет.");
+                        else PrintData(infoDirectory.newLength);
+                        break;
+                    case MenuActions.Quit:
+                        return;
                 }
-                if ((Menu)action == Menu.GetData)
-                {
-                    Console.Clear();
-                    Console.Write("Введите директорию, информацию о которой хотите получить: ");
-                    var path = Console.ReadLine();
-                    var files = SearchInDb(path);
-                    if (files.Count > 0) PrintData(files);
-                    else PrintData(GetFiles(path));
-                    Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
-                    Console.ReadKey();
-                }
-                if ((Menu)action == Menu.GetLength)
-                {
-                    Console.Clear();
-                    Console.Write("Введите директорию: ");
-                    var path = Console.ReadLine();
-                    Console.WriteLine("Топ-10 самых больших файлов директории");
-                    var files = SearchInDb(path);
-                    if (files.Count > 0) PrintData(GetLength(files));
-                    else PrintData(GetLength(GetFiles(path)));
-                    Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
-                    Console.ReadKey();
-                }
-                if ((Menu)action == Menu.GetBiggestDirs)
-                {
-                    Console.Clear();
-                    Console.Write("Введите директорию: ");
-                    var path = Console.ReadLine();
-                    Console.WriteLine("Топ-10 самых больших директорий");
-                    var files = SearchInDb(path);
-                    if (files.Count > 0) PrintData(GetBiggestDirs(files));
-                    else PrintData(GetBiggestDirs(GetFiles(path)));
-                    Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
-                    Console.ReadKey();
-                }
-                if ((Menu)action == Menu.GetExtensions)
-                {
-                    Console.Clear();
-                    Console.Write("Введите директорию: ");
-                    var path = Console.ReadLine();
-                    Console.WriteLine("Топ-10 самых популярных расширений директории");
-                    var files = SearchInDb(path);
-                    if (files.Count > 0) PrintData(GetExtension(files));
-                    else PrintData(GetExtension(GetFiles(path)));
-                    Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
-                    Console.ReadKey();
-                }
-                if ((Menu)action == Menu.GetBiggestExtensions)
-                {
-                    Console.Clear();
-                    Console.Write("Введите директорию: ");
-                    var path = Console.ReadLine();
-                    Console.WriteLine("Топ-10 самых больших расширений директории");
-                    var files = SearchInDb(path);
-                    if (files.Count > 0) PrintData(GetBiggestExtensions(files));
-                    else PrintData(GetBiggestExtensions(GetFiles(path)));
-                    Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
-                    Console.ReadKey();
-                }
-                if ((Menu)action == Menu.GetChangesFiles)
-                {
-                    Console.Clear();
-                    Console.Write("Введите директорию, изменения которой хотите посмотреть: ");
-                    var path = Console.ReadLine();
-                    var infoDirectory = GetChanges(path);
-                    Console.WriteLine("Новые файлы: ");
-                    if (infoDirectory.newFiles.Count == 0) Console.WriteLine("Новых файлов нет.");
-                    else PrintData(infoDirectory.newFiles);
-                    Console.WriteLine("Удаленные файлы: ");
-                    if (infoDirectory.deletedFiles.Count == 0) Console.WriteLine("Удаленных файлов нет.");
-                    else PrintData(infoDirectory.deletedFiles);
-                    Console.WriteLine("Пересозданные файлы: ");
-                    if (infoDirectory.newTimeCreation.Count == 0) Console.WriteLine("Пересозданных файлов нет.");
-                    else PrintData(infoDirectory.newTimeCreation);
-                    Console.WriteLine("Отредоктированные файлы: ");
-                    if (infoDirectory.newLength.Count == 0) Console.WriteLine("Отредактированных файлов нет.");
-                    else PrintData(infoDirectory.newLength);
-                }
-
+                Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
+                Console.ReadKey();
             }
-            while ((Menu)action != Menu.Quit);
+
+                //if ((MenuActions)action == MenuActions.GetChangesDirs)
+                //{
+                //    Console.Clear();
+                //    Console.Write("Введите директорию, изменения которой хотите посмотреть: ");
+                //    var path = Console.ReadLine();
+                //    var infoDirectory = GetChangesDirs(path);
+                //    Console.WriteLine("Новые директории: ");
+                //    if (infoDirectory.newDirs.Count == 0) Console.WriteLine("Новых директорий нет.");
+                //    else PrintData(infoDirectory.newDirs);
+                //    Console.WriteLine("Удаленные файлы: ");
+                //    if (infoDirectory.delDirs.Count == 0) Console.WriteLine("Удаленных дирейторий нет.");
+                //    else PrintData(infoDirectory.delDirs);
         }
 
         public static string database = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\DataBase.json"; //БД
         #region Напечатать меню
         public static void PrintMenu()
         {
-            foreach (var action in Enum.GetValues(typeof(Menu)))
+            foreach (var action in Enum.GetValues(typeof(MenuActions)))
                 Console.WriteLine($"{(int)action}.{action}");
         }
         #endregion
@@ -270,9 +250,14 @@ namespace FileAnalyzer
             foreach (var file in fileData)
                 Console.WriteLine(file);
         }
+        public static void PrintData(List<string> fileData)
+        {
+            foreach (var file in fileData)
+                Console.WriteLine(file);
+        }
         #endregion
         #region Изменение файлов
-        public static (List<FileData> newFiles, List<FileData> deletedFiles, List<FileData> newLength, List<FileData> newTimeCreation) GetChanges(string path)
+        public static (List<FileData> newFiles, List<FileData> deletedFiles, List<FileData> newLength, List<FileData> newTimeCreation) GetChangesFiles(string path)
         {
             var oldDb = SearchInDb(path);
             if (oldDb.Count == 0)
@@ -295,5 +280,32 @@ namespace FileAnalyzer
             return result;
         }
         #endregion
+        //#region Изменение директории
+        //public static (List<string> newDirs, List<string> delDirs) GetChangesDirs(string path)
+        //{
+        //    var oldDb = SearchInDb(path);
+        //    var newDb = GetFiles(path);
+        //    var newDirs = new List<string>();
+
+        //    var oldDirs = new List<string>();
+        //    if (oldDb.Count == 0)
+        //    {
+        //        throw new Exception("В прежней базе этой директории нет. Изменения не удсатся определить.");
+        //    }
+        //    foreach(var file in oldDb)
+        //        oldDirs.Add(file.FullName.Replace($"\\{file.Name}", ""));
+        //    foreach(var file in newDb)
+        //        newDirs.Add(file.FullName.Replace($"\\{file.Name}", ""));
+        //    var delDirs = new List<string>();
+        //    var creDirs = new List<string>(newDirs);
+        //    foreach(var dir in oldDirs)
+        //    {
+        //        if (!newDirs.Any(x => x == dir)) delDirs.Add(dir);
+        //        creDirs.RemoveAll(x => x == dir);
+        //    }
+        //    var result = (newDirs : creDirs, delDirs: delDirs);
+        //    return result;
+        //}
+        //#endregion
     }
 }

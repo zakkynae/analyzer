@@ -3,10 +3,10 @@
     public class FileData
     {
         public string FullName { get; set; }
-        public string Name { get; set; }
-        public string Extension { get; set; }
-        public long Length { get; set; }
-        public DateTime CreationDate { get; set; }
+        public string Name { get; private set; }
+        public string Extension { get; private set; }
+        public long Length { get; private set; }
+        public DateTime CreationDate { get; private set; }
 
 
         public FileData(string fullName, string name, string extension, long length, DateTime creationTime)//: this()
@@ -17,10 +17,8 @@
             Length = length;
             CreationDate = creationTime;
         }
-        //public FileData()
-        //{
+        
 
-        //}
         public override string ToString()
         {
             return $"Имя файла: {Name}\tРасширение файла: {Extension}\tРазмер файла: {Length}\tДата создания файла: {CreationDate}\n";
