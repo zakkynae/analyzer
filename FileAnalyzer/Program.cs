@@ -12,10 +12,11 @@ namespace FileAnalyzer
 
             while (true)
             {
+                Console.Clear();
                 PrintMenu();
                 Console.Write("Выберите действие: ");
                 action = (MenuActions)int.Parse(Console.ReadLine());
-                Console.Clear();
+                if (action == MenuActions.Quit) return;
                 Console.Write("Введите директорию: ");
                 var path = Console.ReadLine();
                 var files = SearchInDb(path);
@@ -65,8 +66,6 @@ namespace FileAnalyzer
                         if (infoDirectory.newLength.Count == 0) Console.WriteLine("Отредактированных файлов нет.");
                         else PrintData(infoDirectory.newLength);
                         break;
-                    case MenuActions.Quit:
-                        return;
                 }
                 Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
                 Console.ReadKey();
@@ -240,21 +239,21 @@ namespace FileAnalyzer
         }
         #endregion
         #region Вывод данных в консоль
-        public static void PrintData(List<FileData> fileData)
+        public static void PrintData(IEnumerable<object> fileData)
         {
             foreach (var file in fileData)
                 Console.WriteLine(file);
         }
-        public static void PrintData(string[] fileData)
-        {
-            foreach (var file in fileData)
-                Console.WriteLine(file);
-        }
-        public static void PrintData(List<string> fileData)
-        {
-            foreach (var file in fileData)
-                Console.WriteLine(file);
-        }
+        //public static void PrintData(string[] fileData)
+        //{
+        //    foreach (var file in fileData)
+        //        Console.WriteLine(file);
+        //}
+        //public static void PrintData(List<string> fileData)
+        //{
+        //    foreach (var file in fileData)
+        //        Console.WriteLine(file);
+        //}
         #endregion
         #region Изменение файлов
         public static (List<FileData> newFiles, List<FileData> deletedFiles, List<FileData> newLength, List<FileData> newTimeCreation) GetChangesFiles(string path)

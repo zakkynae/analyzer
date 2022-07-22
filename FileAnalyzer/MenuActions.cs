@@ -15,7 +15,6 @@ namespace FileAnalyzer
         GetLength,
         GetBiggestDirs,
         GetChangesFiles,
-        //GetChangesDirs,
         Quit
     }
 }
