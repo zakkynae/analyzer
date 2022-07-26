@@ -23,5 +23,12 @@
         {
             return $"Имя файла: {Name}\tРасширение файла: {Extension}\tРазмер файла: {Length}\tДата создания файла: {CreationDate}\n";
         }
+        public override bool Equals(object? obj)
+        {
+            if (obj is FileData fileData) 
+                return Name == fileData.Name && Length == fileData.Length && CreationDate == fileData.CreationDate && Extension == fileData.Extension;
+            return false;
+        }
+        public override int GetHashCode() => Name.GetHashCode();
     }
 }
