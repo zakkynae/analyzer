@@ -1,0 +1,12 @@
+C:\Users\void_\Desktop\hw\LINQExtensions\bin\Debug\net6.0\LINQExtensions.deps.json
+C:\Users\void_\Desktop\hw\LINQExtensions\bin\Debug\net6.0\LINQExtensions.dll
+C:\Users\void_\Desktop\hw\LINQExtensions\bin\Debug\net6.0\LINQExtensions.pdb
+C:\Users\void_\Desktop\hw\LINQExtensions\obj\Debug\net6.0\LINQExtensions.csproj.AssemblyReference.cache
+C:\Users\void_\Desktop\hw\LINQExtensions\obj\Debug\net6.0\LINQExtensions.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\void_\Desktop\hw\LINQExtensions\obj\Debug\net6.0\LINQExtensions.AssemblyInfoInputs.cache
+C:\Users\void_\Desktop\hw\LINQExtensions\obj\Debug\net6.0\LINQExtensions.AssemblyInfo.cs
+C:\Users\void_\Desktop\hw\LINQExtensions\obj\Debug\net6.0\LINQExtensions.csproj.CoreCompileInputs.cache
+C:\Users\void_\Desktop\hw\LINQExtensions\obj\Debug\net6.0\LINQExtensions.dll
+C:\Users\void_\Desktop\hw\LINQExtensions\obj\Debug\net6.0\refint\LINQExtensions.dll
+C:\Users\void_\Desktop\hw\LINQExtensions\obj\Debug\net6.0\LINQExtensions.pdb
+C:\Users\void_\Desktop\hw\LINQExtensions\obj\Debug\net6.0\ref\LINQExtensions.dll
