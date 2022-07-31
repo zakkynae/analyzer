@@ -28,10 +28,17 @@ public static class IEnumerableExtensions
         return index == count;
     }
     public static bool IsEmpty<T>(this IEnumerable<T> enumerable) => (enumerable.Count() == 0 || enumerable == null) ? true : false;
-    public static IEnumerable<IEnumerable<T>> Batch<T>(this IEnumerable<T> enumerable, int length)
+    //public static IEnumerable<IEnumerable<T>> Batch<T>(this IEnumerable<T> enumerable, int length)
+    //{
+    //    var values = new List<IEnumerable<T>>();
+    //}
+    public static IEnumerable<T> Insert<T>(this IEnumerable<T> enumerable, int index, T item)
     {
-        var values = new List<IEnumerable<T>>();
-
+        var list = new List<T>();
+        foreach (var e in enumerable)
+            list.Add(e);
+        list.Insert(index, item);
+        return list;
     }
 
 }
