@@ -1,6 +1,5 @@
-﻿using System.Linq;
-namespace LINQExtensions;
-public static class IEnumerableExtensions
+﻿namespace LINQExtensions;
+public static class EnumerableExtensions
 {
     public static IEnumerable<T> Ensure<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate)
     {
@@ -27,18 +26,24 @@ public static class IEnumerableExtensions
             if(predicate(item)) index++;
         return index == count;
     }
-    public static bool IsEmpty<T>(this IEnumerable<T> enumerable) => (enumerable.Count() == 0 || enumerable == null) ? true : false;
-    //public static IEnumerable<IEnumerable<T>> Batch<T>(this IEnumerable<T> enumerable, int length)
-    //{
-    //    var values = new List<IEnumerable<T>>();
-    //}
+    public static bool IsEmpty<T>(this IEnumerable<T> enumerable) => (enumerable == null || enumerable.Count() == 0);
+
     public static IEnumerable<T> Insert<T>(this IEnumerable<T> enumerable, int index, T item)
     {
-        var list = new List<T>();
-        foreach (var e in enumerable)
-            list.Add(e);
+        var list = new List<T>(enumerable);
         list.Insert(index, item);
         return list;
     }
+
+    public static IEnumerable<T> Disorder<T>(this IEnumerable<T> enumerable)
+    {
+        var rnd = new Random();
+        return enumerable.OrderBy(x => rnd.Next());
+    }
+    //public static IEnumerable<T> Split<T>(this IEnumerable<T> enumerable, T item)
+    //{
+    //    return enumerable.ToString().Split((char)item).ToList();
+    //}
+
 
 }

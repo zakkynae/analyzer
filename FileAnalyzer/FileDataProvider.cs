@@ -12,6 +12,7 @@ namespace FileAnalyzer
         public static List<FileData> GetFiles(string path)
         {
             var fileData = new List<FileData>();
+            var dirsData = new List<string>();
             var dirs = new Stack<string>();
             if (!Directory.Exists(path))
             {

@@ -21,9 +21,28 @@ namespace FileAnalyzer
         {
             var sortedFiles = files.OrderByDescending(f => f.Length).ToList();
             var lengths = new List<FileData>();
-            for (int i = 0; i < 10; i++)
-                lengths.Add(sortedFiles[i]);
+            if(sortedFiles.Count >=10 )
+                for (int i = 0; i < 10; i++)
+                    lengths.Add(sortedFiles[i]);
+            else
+            {
+                for (int i = 0; i < sortedFiles.Count; i++)
+                    lengths.Add(sortedFiles[i]);
+            }
             return lengths;
+        }
+        public static List<FileData> CopiesLargeFiles(List<FileData> files)
+        {
+            var dictionary = new Dictionary<FileData, int>();
+            foreach (var e in files)
+            {
+                if (!dictionary.ContainsKey(e)) dictionary[e] = 0;
+                dictionary[e]++;
+            }
+            return dictionary
+                .Where(x => x.Value > 1)
+                .Select(x => x.Key)
+                .ToList();
         }
         #endregion
         #region Топ 10 больших директорий
@@ -97,28 +116,30 @@ namespace FileAnalyzer
         }
         #endregion
         #region Изменение файлов
-        public static (List<FileData> newFiles, List<FileData> deletedFiles, List<FileData> newLength, List<FileData> newTimeCreation) GetChangesFiles(string path)
-        {
-            var oldDb = FileDataDao.SearchInDb(path);
-            if (oldDb.Count == 0)
-            {
-                throw new Exception("В прежней базе этой директории нет. Изменения не удсатся определить.");
-            }
-            var newDb = FileDataProvider.GetFiles(path);
-            var newFiles = new List<FileData>(newDb);
-            var deletedFiles = new List<FileData>();
-            var newLength = new List<FileData>();
-            var newTimeCreation = new List<FileData>();
-            foreach (var file in oldDb)
-            {
-                if (!newDb.Any(x => x.Name == file.Name)) deletedFiles.Add(file);
-                newFiles.RemoveAll(x => x.Name == file.Name);
-                if (newDb.Any(x => x.Name == file.Name && x.Length != file.Length)) newLength.Add(file);
-                if (newDb.Any(x => x.Name == file.Name && x.CreationDate != file.CreationDate)) newTimeCreation.Add(file);
-            }
-            var result = (newFiles: newFiles, deletedFiles: deletedFiles, newLength: newLength, newTimeCreation: newTimeCreation);
-            return result;
-        }
+
+        // Класс FileSystemWatcher - переделать
+        //public static (List<FileData> newFiles, List<FileData> deletedFiles, List<FileData> newLength, List<FileData> newTimeCreation) GetChangesFiles(string path)
+        //{
+        //    var oldDb = FileDataDao.SearchInDb(path);
+        //    if (oldDb.Count == 0)
+        //    {
+        //        throw new Exception("В прежней базе этой директории нет. Изменения не удсатся определить.");
+        //    }
+        //    var newDb = FileDataProvider.GetFiles(path);
+        //    var newFiles = new List<FileData>(newDb);
+        //    var deletedFiles = new List<FileData>();
+        //    var newLength = new List<FileData>();
+        //    var newTimeCreation = new List<FileData>();
+        //    foreach (var file in oldDb)
+        //    {
+        //        foreach(var newFile in newDb)
+        //            if(!newFiles.Remove(file)) deletedFiles.Add(file);
+        //        if (newDb.Any(x => x.Name == file.Name && file.Length != x.Length && file.CreationDate == x.CreationDate)) newLength.Add(file);
+        //        if (newDb.Any(x => x.Name == file.Name && file.Length == x.Length &&  x.CreationDate != file.CreationDate)) newTimeCreation.Add(file);
+        //    }
+        //    var result = (newFiles: newFiles, deletedFiles: deletedFiles, newLength: newLength, newTimeCreation: newTimeCreation);
+        //    return result;
+        //}
         #endregion
     }
 }

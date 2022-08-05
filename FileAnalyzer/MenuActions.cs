@@ -13,6 +13,7 @@ namespace FileAnalyzer
         GetExtensions,
         GetBiggestExtensions,
         GetLength,
+        CopiesLargeFiles,
         GetBiggestDirs,
         GetChangesFiles,
         Quit
