@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Newtonsoft.Json;
-//using System.Text.Json;
 
 namespace FileAnalyzer
 {
@@ -19,7 +18,7 @@ namespace FileAnalyzer
                 if (action == MenuActions.Quit) return;
                 Console.Write("Введите директорию: ");
                 var path = Console.ReadLine();
-                var files = FileDataDao.SearchInDb(path).Count > 0 ? FileDataDao.SearchInDb(path) : FileDataProvider.GetFiles(path);
+                var files = action == MenuActions.GetNewData || FileDataDao.SearchInDb(path).Count == 0 ? FileDataProvider.GetFiles(path) : FileDataDao.SearchInDb(path);
                 switch (action)
                 {
                     case MenuActions.GetNewData:
@@ -55,6 +54,21 @@ namespace FileAnalyzer
                         Console.WriteLine("Топ-10 самых больших расширений директории");
                         FileDataService.PrintData(FileDataService.GetBiggestExtensions(files));
                         break;
+                    case MenuActions.GetChangesFiles:
+                        var infoDirectory = FileDataService.GetChangesFiles(path);
+                        Console.WriteLine("Новые файлы: ");
+                        if (infoDirectory.newFiles.Count == 0) Console.WriteLine("Новых файлов нет.");
+                        else FileDataService.PrintData(infoDirectory.newFiles);
+                        Console.WriteLine("Удаленные файлы: ");
+                        if (infoDirectory.deletedFiles.Count == 0) Console.WriteLine("Удаленных файлов нет.");
+                        else FileDataService.PrintData(infoDirectory.deletedFiles);
+                        Console.WriteLine("Пересозданные файлы: ");
+                        if (infoDirectory.newTimeCreation.Count == 0) Console.WriteLine("Пересозданных файлов нет.");
+                        else FileDataService.PrintData(infoDirectory.newTimeCreation);
+                        Console.WriteLine("Отредактированные файлы: ");
+                        if (infoDirectory.newLength.Count == 0) Console.WriteLine("Отредактированных файлов нет.");
+                        else FileDataService.PrintData(infoDirectory.newLength);
+                        break;
                 }
                 Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
                 Console.ReadKey();
@@ -62,18 +76,3 @@ namespace FileAnalyzer
         }
     }
 }
-//case MenuActions.GetChangesFiles:
-//    var infoDirectory = FileDataService.GetChangesFiles(path);
-//    Console.WriteLine("Новые файлы: ");
-//    if (infoDirectory.newFiles.Count == 0) Console.WriteLine("Новых файлов нет.");
-//    else FileDataService.PrintData(infoDirectory.newFiles);
-//    Console.WriteLine("Удаленные файлы: ");
-//    if (infoDirectory.deletedFiles.Count == 0) Console.WriteLine("Удаленных файлов нет.");
-//    else FileDataService.PrintData(infoDirectory.deletedFiles);
-//    Console.WriteLine("Пересозданные файлы: ");
-//    if (infoDirectory.newTimeCreation.Count == 0) Console.WriteLine("Пересозданных файлов нет.");
-//    else FileDataService.PrintData(infoDirectory.newTimeCreation);
-//    Console.WriteLine("Отредактированные файлы: ");
-//    if (infoDirectory.newLength.Count == 0) Console.WriteLine("Отредактированных файлов нет.");
-//    else FileDataService.PrintData(infoDirectory.newLength);
-//    break;

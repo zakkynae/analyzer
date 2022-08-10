@@ -116,30 +116,28 @@ namespace FileAnalyzer
         }
         #endregion
         #region Изменение файлов
-
-        // Класс FileSystemWatcher - переделать
-        //public static (List<FileData> newFiles, List<FileData> deletedFiles, List<FileData> newLength, List<FileData> newTimeCreation) GetChangesFiles(string path)
-        //{
-        //    var oldDb = FileDataDao.SearchInDb(path);
-        //    if (oldDb.Count == 0)
-        //    {
-        //        throw new Exception("В прежней базе этой директории нет. Изменения не удсатся определить.");
-        //    }
-        //    var newDb = FileDataProvider.GetFiles(path);
-        //    var newFiles = new List<FileData>(newDb);
-        //    var deletedFiles = new List<FileData>();
-        //    var newLength = new List<FileData>();
-        //    var newTimeCreation = new List<FileData>();
-        //    foreach (var file in oldDb)
-        //    {
-        //        foreach(var newFile in newDb)
-        //            if(!newFiles.Remove(file)) deletedFiles.Add(file);
-        //        if (newDb.Any(x => x.Name == file.Name && file.Length != x.Length && file.CreationDate == x.CreationDate)) newLength.Add(file);
-        //        if (newDb.Any(x => x.Name == file.Name && file.Length == x.Length &&  x.CreationDate != file.CreationDate)) newTimeCreation.Add(file);
-        //    }
-        //    var result = (newFiles: newFiles, deletedFiles: deletedFiles, newLength: newLength, newTimeCreation: newTimeCreation);
-        //    return result;
-        //}
+        public static (List<FileData> newFiles, List<FileData> deletedFiles, List<FileData> newLength, List<FileData> newTimeCreation) GetChangesFiles(string path)
+        {
+            var oldDb = FileDataDao.SearchInDb(path);
+            if (oldDb.Count == 0)
+            {
+                throw new Exception("В прежней базе этой директории нет. Изменения не удсатся определить.");
+            }
+            var newDb = FileDataProvider.GetFiles(path);
+            var newFiles = new List<FileData>(newDb);
+            var deletedFiles = new List<FileData>();
+            var newLength = new List<FileData>();
+            var newTimeCreation = new List<FileData>();
+            foreach (var file in oldDb)
+            {
+                newFiles.RemoveAll(x => x.Name == file.Name);
+                if (!newDb.Any(x => x.Name == file.Name)) deletedFiles.Add(file);
+                if (newDb.Any(x => x.Name == file.Name && x.Length != file.Length)) newLength.Add(file);
+                if (newDb.Any(x => x.Name == file.Name && x.CreationDate != file.CreationDate)) newTimeCreation.Add(file);
+            }
+            var result = (newFiles: newFiles, deletedFiles: deletedFiles, newLength: newLength, newTimeCreation: newTimeCreation);
+            return result;
+        }
         #endregion
     }
 }

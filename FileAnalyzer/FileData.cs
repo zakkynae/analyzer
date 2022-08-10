@@ -3,13 +3,13 @@
     public class FileData
     {
         public string FullName { get; set; }
-        public string Name { get; private set; }
-        public string Extension { get; private set; }
-        public long Length { get; private set; }
-        public DateTime CreationDate { get; private set; }
+        public string Name { get; set; }
+        public string Extension { get; set; }
+        public long Length { get; set; }
+        public DateTime CreationDate { get; set; }
 
 
-        public FileData(string fullName, string name, string extension, long length, DateTime creationTime)//: this()
+        public FileData(string fullName, string name, string extension, long length, DateTime creationTime)
         {
             FullName = fullName;
             Name = name;
@@ -29,6 +29,9 @@
                 return Name == fileData.Name && Length == fileData.Length && Extension == fileData.Extension;
             return false;
         }
-        public override int GetHashCode() => Name.GetHashCode();
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }
