@@ -10,9 +10,11 @@ namespace FileAnalyzer
     internal class FileDataDao
     {
         public static string database = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\DataBase.json";
+
         #region Запись в БД
         public static void WriteDb(List<FileData> fileData)
         {
+            if (!File.Exists(database)) File.Create(database);
             var db = new List<string>();
             foreach (var file in fileData)
             {
@@ -36,6 +38,13 @@ namespace FileAnalyzer
                     fileData.Add(file);
             }
             return fileData;
+        }
+        public static object? GetDataFromBase()
+        {
+            var db = File.ReadAllLines(database);
+            if (string.IsNullOrEmpty(db[0])) return null; 
+            var file = JsonConvert.DeserializeObject<FileData>(db[0]);
+            return file.FullName.Replace($"\\{file.Name}", "");
         }
         #endregion
     }

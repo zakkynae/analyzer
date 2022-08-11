@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace FileAnalyzer
 {
@@ -52,6 +53,22 @@ namespace FileAnalyzer
             }
             return fileData;
         }
+        #endregion
+
+        #region Автопересканирование
+        public static void Autoscanning()
+        {
+            var tm = new TimerCallback(DataForScanning);
+            var timer = new Timer(tm, FileDataDao.GetDataFromBase(), 0, 1000);
+
+        }
+        public static void DataForScanning(object? path)
+        {
+            if (path == null) return;
+            FileDataDao.WriteDb(GetFiles(path.ToString()));
+            Console.WriteLine($"Автопересканирование заверншено {DateTime.Now}");
+        }
+
         #endregion
     }
 }

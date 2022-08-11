@@ -8,10 +8,12 @@ namespace FileAnalyzer
         static void Main()
         {
             MenuActions action;
-
+            if (FileDataDao.GetDataFromBase() is object) FileDataProvider.Autoscanning();
             while (true)
             {
+
                 Console.Clear();
+
                 FileDataService.PrintMenu();
                 Console.Write("Выберите действие: ");
                 action = (MenuActions)int.Parse(Console.ReadLine());
