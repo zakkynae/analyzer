@@ -59,16 +59,13 @@ namespace FileAnalyzer
         public static void Autoscanning()
         {
             var tm = new TimerCallback(DataForScanning);
-            var timer = new Timer(tm, FileDataDao.GetDataFromBase(), 0, 1000);
+            var timer = new Timer(tm, FileDataDao.GetDataFromBase(), 0, 60000);
 
         }
         public static void DataForScanning(object? path)
         {
-            if (path == null) return;
             FileDataDao.WriteDb(GetFiles(path.ToString()));
-            Console.WriteLine($"Автопересканирование заверншено {DateTime.Now}");
         }
-
         #endregion
     }
 }

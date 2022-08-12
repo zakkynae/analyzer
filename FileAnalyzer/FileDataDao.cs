@@ -42,7 +42,7 @@ namespace FileAnalyzer
         public static object? GetDataFromBase()
         {
             var db = File.ReadAllLines(database);
-            if (string.IsNullOrEmpty(db[0])) return null; 
+            //if (string.IsNullOrEmpty(db[0])) return null; 
             var file = JsonConvert.DeserializeObject<FileData>(db[0]);
             return file.FullName.Replace($"\\{file.Name}", "");
         }
