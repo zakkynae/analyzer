@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
-
-namespace FileAnalyzer
+﻿namespace FileAnalyzer
 {
     internal class FileDataProvider
     {
@@ -59,11 +52,12 @@ namespace FileAnalyzer
         public static void Autoscanning()
         {
             var tm = new TimerCallback(DataForScanning);
-            var timer = new Timer(tm, FileDataDao.GetDataFromBase(), 0, 60000);
+            var timer = new Timer(tm, FileDataDao.GetDataFromBase(), 0, 10000);
 
         }
         public static void DataForScanning(object? path)
         {
+            if (path == null) return;
             FileDataDao.WriteDb(GetFiles(path.ToString()));
         }
         #endregion

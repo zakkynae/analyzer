@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
+﻿using System.Reflection;
 using Newtonsoft.Json;
 namespace FileAnalyzer
 {
@@ -41,10 +36,18 @@ namespace FileAnalyzer
         }
         public static object? GetDataFromBase()
         {
-            var db = File.ReadAllLines(database);
-            //if (string.IsNullOrEmpty(db[0])) return null; 
-            var file = JsonConvert.DeserializeObject<FileData>(db[0]);
-            return file.FullName.Replace($"\\{file.Name}", "");
+            try
+            {
+                var db = File.ReadAllLines(database);
+                if (string.IsNullOrEmpty(db[0])) return null;
+                var file = JsonConvert.DeserializeObject<FileData>(db[0]);
+                return file.FullName.Replace($"\\{file.Name}", "");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
         }
         #endregion
     }

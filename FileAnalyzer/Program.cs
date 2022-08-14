@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using Newtonsoft.Json;
-
-namespace FileAnalyzer
+﻿namespace FileAnalyzer
 {
     public class Program
     {
@@ -11,9 +8,10 @@ namespace FileAnalyzer
             if (FileDataDao.GetDataFromBase() is object) FileDataProvider.Autoscanning();
             while (true)
             {
-
+                //var path = FileDataDao.GetDataFromBase();
+                //FileDataProvider.DataForScanning(path);
+                //Task.Delay(1000).Wait();
                 Console.Clear();
-
                 FileDataService.PrintMenu();
                 Console.Write("Выберите действие: ");
                 action = (MenuActions)int.Parse(Console.ReadLine());
@@ -75,6 +73,6 @@ namespace FileAnalyzer
                 Console.WriteLine("Для продолжения нажмите любуюу клавишу...");
                 Console.ReadKey();
             }
-        }
+    }
     }
 }
