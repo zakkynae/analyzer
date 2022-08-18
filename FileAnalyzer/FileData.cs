@@ -11,10 +11,10 @@
 
         public FileData(string fullName, string name, string extension, long length, DateTime creationTime)
         {
-            FullName = fullName;
-            Name = name;
-            Extension = extension;
-            Length = length;
+            FullName =  string.IsNullOrEmpty(fullName) ? throw new ArgumentException("Полное имя файла не может принимать такое значение") : fullName;
+            Name = string.IsNullOrEmpty(name) ? throw new ArgumentException("Имя файла не может принимать такое значение") : name; 
+            Extension = string.IsNullOrEmpty(extension) ? throw new ArgumentException("Расширение не может принимать такое значение") : extension;
+            Length = length < 0 ? throw new ArgumentException("Размер файла не может принимать такое значение") : length;
             CreationDate = creationTime;
         }
         
